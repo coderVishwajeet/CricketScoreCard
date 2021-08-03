@@ -298,18 +298,19 @@ public:
 					team->setPlayersMap(firstPlayer->getPlayerName(),
 							firstPlayer);
 					break;
-				case WICKET:
+				case WICKET: {
 					ball.addBallType(WICKET);
 					ball.addRun(new Run, 0);
 					over.addBall(ball);
 					firstPlayer->addPlayerStat(firstPlayer->getPlayerName(), 0,
 							0, 0, 1);
-					team->modifyPlayerQueue(0, firstPlayer);
 					team->setPlayersMap(firstPlayer->getPlayerName(),
 							firstPlayer);
 					team->removeBatsMan();
+					team->changePlayerStrike();
 					ballNumber++;
 					break;
+				}
 				case NO_BALL:
 					ball.addBallType(NO_BALL);
 					ball.addRun(new Run, 1);
@@ -373,7 +374,9 @@ public:
 					ballNumber++;
 					break;
 				default:
-					cout << "Invalid Input, Please try again..." << endl;
+					cout
+							<< "Invalid Input, Please try again...(use: 0,1,2,3,4,6,w,wb,nb)"
+							<< endl;
 					continue;
 				}
 			}
@@ -390,12 +393,14 @@ public:
 			int totalBalls = this->getTotalBalls();
 			this->setTotalWickets(totalWickets);
 			cout << "Total: " << totalScore << "/" << totalWickets << endl;
-            cout<< "Overs: "<<totalBalls/6<<"."<<totalBalls%6<<endl;
-		if (isInningOver)
-		break;
+			cout << "Overs: " << totalBalls / 6 << "." << totalBalls % 6
+					<< endl;
+			if (isInningOver)
+				break;
+			team->changePlayerStrike();
+		}
+		this->setTotalScore(totalScore);
 	}
-	this->setTotalScore(totalScore);
-}
 };
 
 class Match {
@@ -416,7 +421,7 @@ public:
 			cout << "Result: Team-1 won the match by " << abs(diff) << " runs"
 					<< endl;
 		} else if (diff < 0) {
-			cout << "Result: Team-2 won the match by " << -abs(diff) << " runs"
+			cout << "Result: Team-2 won the match by " << abs(diff) << " runs"
 					<< endl;
 		} else {
 			cout << "Result: Match Draw: " << endl;
